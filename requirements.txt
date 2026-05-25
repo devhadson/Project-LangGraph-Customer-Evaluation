@@ -1,0 +1,8 @@
+# Core de Orquestación de Agentes y Grafos de Estado
+langgraph==0.0.60
+
+# Estructuras de Datos y Generación del Motor Sintético
+pandas==2.2.2
+
+# Dependencia base obligatoria para la gestión de hilos y decoradores en LangGraph
+typing-extensions>=4.10.0
