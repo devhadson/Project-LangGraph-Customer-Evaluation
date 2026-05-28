@@ -1,6 +1,6 @@
 """
 MÓDULO: app.py
-DESCRIPCIÓN: Definición del esquema de Estado, nodos de decisión y ensamble del Grafo con Checkpointer.
+DESCRIPCIÓN: Definición del esquema de Estado, nodos de decisión y del Grafo con Checkpointer.
 """
 from typing import TypedDict, List, Dict, Any, Literal
 from datetime import datetime

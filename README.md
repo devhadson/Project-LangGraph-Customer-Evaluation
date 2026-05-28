@@ -12,7 +12,7 @@
 [4. LISTA DE NODOS Y RESPONSABILIDAD DE CADA UNO](#4-lista-de-nodos-y-responsabilidad-de-cada-uno)<br>
 [5. EXPLICACION DE CHECKPOINTS Y THREAD_ID](#5-explicacion-de-checkpoints-y-thread_id)<br>
 [6. INSTRUCCIONES DE INSTALACION](#6-instrucciones-de-instalacion)<br>
-[7. INSTRUCCIONES DE EJECUCION](#7-instrucciones-de-ejecucion)<br>
+[7. INSTRUCCIONES DE EJECUCION Y RESULTADO](#7-instrucciones-de-ejecucion-y-resultado)<br>
 [8. COMO REPRODUCIR REPLAY, FORK O APROBACION HUMANA SEGUN CORRESPONDA](#8-como-reproducir-replay-fork-o-aprobacion-humana-segun-corresponda)<br>
 [9. CAPTURAS O RESUTADOS ESPERADO DE LA DEMO](#9-capturas-o-resutados-esperado-de-la-demo)<br>
 [10. PROXIMO PASOS (ROADMAP)](#10-proximo-pasos-roadmap)<br>
@@ -80,11 +80,16 @@ Al implementar la solución basada en grafos con persistencia transaccional de c
 ### Matriz de Scoring de Riesgo Financiero
 El puntaje interno de riesgo consolidado opera en una escala de `0 (Mínimo Riesgo)` a `100 (Máximo Riesgo)`. Su cálculo se basa en la combinación de los ingresos demostrables mensuales del cliente y su Score Crediticio Externo obtenido de centrales de riesgo:
 
+#### Condición de Score
+
 | Condición de Score | Impacto en Puntos |
 | :--- | :--- |
 | Score > 700 puntos (Excelente) | Resta 40 puntos de riesgo |
 | Score > 550 puntos (Regular) | Resta 20 puntos de riesgo |
 | Score <= 550 puntos (Deficiente) | Mantiene base de riesgo |
+
+
+#### Condición de Ingresos Mensuales
 
 | Condición de Ingresos Mensuales | Impacto en Puntos |
 | :--- | :--- |
@@ -503,8 +508,7 @@ pip install -r requirements.txt
 
 ---
 
-#	7. INSTRUCCIONES DE EJECUCION
-
+#	7. INSTRUCCIONES DE EJECUCION Y RESULTADO
 ## Inicialización del Motor de Datos Sintéticos
 
 Este paso creará el archivo CSV local que simula la base de datos central del banco **"HT Perú"**.
@@ -596,6 +600,103 @@ En el diseño actual, el sistema deriva los casos dudosos (como el de Ana Gómez
 
 
 # 9. CAPTURAS O RESUTADOS ESPERADO DE LA DEMO
+
+Ejecución desde Visual Studio Code, pueden revisar el punto [7. INSTRUCCIONES DE EJECUCION Y RESULTADO](#7-instrucciones-de-ejecucion-y-resultado) para revisar el detalle del resultado.
+
+## Ejecución del Caso 1 (La Ruta Original con Error)
+
+```text
+Executing task: C:\Users\User\anaconda3\python.exe d:\Hadson.TECH\Project-LangGraph-Customer-Evaluation\case_original_error.py 
+
+===========================================================================
+ INICIANDO EJECUCIÓN DEL CASO 1: RUTA TRANSACCIONAL ORIGINAL CON ERRORES
+===========================================================================
+
+[DATOS CAPTURADOS] Cliente: Ana Gomez
+[DATOS CAPTURADOS] Ingresos Registrados: S/. 1200
+[DATOS CAPTURADOS] Score Externo: 720 pts.
+
+--> Transmitiendo estados a los nodos de LangGraph...
+    [CHECKPOINT CAPTURADO] Nodo 'recibir_datos' procesado y congelado por MemorySaver.
+    [CHECKPOINT CAPTURADO] Nodo 'validar_documento' procesado y congelado por MemorySaver.
+    [CHECKPOINT CAPTURADO] Nodo 'revisar_listas' procesado y congelado por MemorySaver.
+    [CHECKPOINT CAPTURADO] Nodo 'calcular_riesgo' procesado y congelado por MemorySaver.
+    [CHECKPOINT CAPTURADO] Nodo 'decidir_aprobacion' procesado y congelado por MemorySaver.
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+ RESULTADOS FINALES DE LA RUTA ORIGINAL:
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    Monto Procesado: S/. 1200
+    Riesgo Interno Asignado: 60 puntos (Alto Penalizado)
+    Dictamen del Sistema: Revisión Manual
+
+    Logs Históricos Consolidados:
+      [21:17:01] Nodo 5: Dictamen emitido por el motor: Revisión Manual.
+===========================================================================
+
+ *  Terminal will be reused by tasks, press any key to close it. 
+```
+ ## Ejecución del Caso 2 (Time Travel - Viaje en el Tiempo y Forking)
+
+```text
+ Executing task: C:\Users\User\anaconda3\python.exe d:\Hadson.TECH\Project-LangGraph-Customer-Evaluation\case_time_travel_fork.py 
+
+===========================================================================
+ INICIANDO EJECUCIÓN DEL CASO 1: RUTA TRANSACCIONAL ORIGINAL CON ERRORES
+===========================================================================
+
+[DATOS CAPTURADOS] Cliente: Ana Gomez
+[DATOS CAPTURADOS] Ingresos Registrados: S/. 1200
+[DATOS CAPTURADOS] Score Externo: 720 pts.
+
+--> Transmitiendo estados a los nodos de LangGraph...
+    [CHECKPOINT CAPTURADO] Nodo 'recibir_datos' procesado y congelado por MemorySaver.
+    [CHECKPOINT CAPTURADO] Nodo 'validar_documento' procesado y congelado por MemorySaver.
+    [CHECKPOINT CAPTURADO] Nodo 'revisar_listas' procesado y congelado por MemorySaver.
+    [CHECKPOINT CAPTURADO] Nodo 'calcular_riesgo' procesado y congelado por MemorySaver.
+    [CHECKPOINT CAPTURADO] Nodo 'decidir_aprobacion' procesado y congelado por MemorySaver.
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+ RESULTADOS FINALES DE LA RUTA ORIGINAL:
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    Monto Procesado: S/. 1200
+    Riesgo Interno Asignado: 60 puntos (Alto Penalizado)
+    Dictamen del Sistema: Revisión Manual
+
+    Logs Históricos Consolidados:
+      [21:22:05] Nodo 5: Dictamen emitido por el motor: Revisión Manual.
+===========================================================================
+
+===========================================================================
+ INICIANDO EJECUCIÓN DEL CASO 2: TIME TRAVEL & FORKING (RAMA PARALELA)
+===========================================================================
+
+[AUDITORÍA] Checkpoints localizados en el clúster de memoria: 7
+
+[RESTORE] Punto de control seleccionado de forma exitosa:
+    -> ID del Checkpoint Histórico: 1f15a3c0-518f-644e-8002-e180241204a8
+    -> Nodos en cola de ejecución en este instante: ('revisar_listas',)
+
+--> Aplicando 'update_state' para consolidar la enmienda en el Checkpoint...
+
+--> Reanudando procesamiento desde el punto intermedio (.stream alterno)...
+    [FORK-PROCESO] Nodo 'revisar_listas' calculado aisladamente sobre la nueva rama.
+    [FORK-PROCESO] Nodo 'calcular_riesgo' calculado aisladamente sobre la nueva rama.
+    [FORK-PROCESO] Nodo 'decidir_aprobacion' calculado aisladamente sobre la nueva rama.
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+ RESULTADOS FINALES DE LA NUEVA RAMA (FORK):
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    Cliente Evaluado: Ana Gomez
+    Monto Modificado Ejecutado: S/. 1200
+    Nuevo Score de Riesgo Calculado: 0 puntos (Riesgo Bajo)
+    Nueva Decisión Final del Grafo: 
+
+    Trazabilidad de la Bitácora de Eventos de la Nueva Rama:
+      [21:22:05] Nodo 2: Validación estructural de DNI concluida. Estado: True.
+===========================================================================
+ *  Terminal will be reused by tasks, press any key to close it. 
+```
 
 ---
 
